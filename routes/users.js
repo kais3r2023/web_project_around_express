@@ -1,17 +1,16 @@
-const { error } = require('console');
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
 
 const router = express.Router();
 
-const filePath = path.join(__dirname , '..' , 'data', 'users.json');
+const filePath = path.join(__dirname, '..', 'data', 'users.json');
 
-router.get('/', (req, res )=>{
-  fs.readFile(filePath, 'utf-8', ()=>{
-    if (error){
-      console.error;
-      res.status(500).json({ message: 'Error interno del servidor'});
+router.get('/', (req, res) => {
+  fs.readFile(filePath, 'utf-8', (error, data) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error interno del servidor' });
       return;
     }
 
@@ -22,13 +21,13 @@ router.get('/', (req, res )=>{
   });
 });
 
-router.get('/:id',(req, res)=>{
+router.get('/:id', (req, res) => {
   const userId = req.params.id;
 
-  fs.readFile(filePath, 'utf8',(error,data)=>{
-    if(error){
-      console.log(error);
-      res.status(500).json({ message: 'Error interno del servidor'});
+  fs.readFile(filePath, 'utf8', (error, data) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error interno del servidor' });
       return;
     }
 
@@ -37,15 +36,14 @@ router.get('/:id',(req, res)=>{
     // Busca el usuario por su ID
     const user = users.find(user => user._id === userId);
 
-    if(!user){
+    if (!user) {
       // Si el usuario no se encuentra, devuelce un mensaje de error
-      res.status(404).json({ message: 'ID de usuario no encontrado'});
+      res.status(404).json({ message: 'ID de usuario no encontrado' });
       return;
     }
 
     // Envía el usuario encontrado como respuesta
     res.json(user);
-  })
-})
-
+  });
+});
 module.exports = router;
