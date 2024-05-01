@@ -6,6 +6,7 @@ const router = express.Router();
 
 const filePath = path.join(__dirname, '..', 'data', 'users.json');
 
+
 router.get('/', (req, res) => {
   fs.readFile(filePath, 'utf-8', (error, data) => {
     if (error) {
@@ -35,6 +36,7 @@ router.get('/:id', (req, res) => {
     const users = JSON.parse(data);
     // Busca el usuario por su ID
     const user = users.find(user => user._id === userId);
+    console.log(user);
 
     if (!user) {
       // Si el usuario no se encuentra, devuelce un mensaje de error
