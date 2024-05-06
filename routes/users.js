@@ -1,13 +1,21 @@
 const express = require('express');
-const fs = require('fs');
-const path = require('path');
+const {getAllUsers, getUser, createUser}= require('../controllers/users');
+
+/* const fs = require('fs');
+const path = require('path'); */
 
 const router = express.Router();
 
-const filePath = path.join(__dirname, '..', 'data', 'users.json');
+/* const filePath = path.join(__dirname, '..', 'data', 'users.json'); */
 
 
-router.get('/', (req, res) => {
+
+router.get('/', getAllUsers);
+router.get('/:userId',getUser);
+router.post('/',createUser);
+
+
+/* router.get('/', (req, res) => {
   fs.readFile(filePath, 'utf-8', (error, data) => {
     if (error) {
       console.error(error);
@@ -47,5 +55,5 @@ router.get('/:id', (req, res) => {
     // Envía el usuario encontrado como respuesta
     res.json(user);
   });
-});
+}); */
 module.exports = router;

@@ -1,10 +1,10 @@
 const express = require('express');
-const fs = require('fs');
-const path = require('path');
+/* const fs = require('fs');
+const path = require('path'); */
 
 const router = express.Router();
 
-const filePath = path.join(__dirname, '..', 'data', 'cards.json');
+/* const filePath = path.join(__dirname, '..', 'data', 'cards.json');
 
 router.get('/', (req, res) => {
   fs.readFile(filePath, 'utf8', (error, data) => {
@@ -19,6 +19,6 @@ router.get('/', (req, res) => {
     // envía la lista de tarjetas como respuesta
     res.json(cards);
   });
-});
+}); */
 
 module.exports = router;
