@@ -4,27 +4,25 @@ const NOT_FOUND_CODE = 404;
 const SERVER_ERROR_CODE = 500;
 
 module.exports.getAllUsers = (req, res)=>{
-  User.find().then((users) =>{
+  User.find()
+  .orFail()
+  .then((users) =>{
     res.send(users);
+  })
+  .catch((error)=>{
+    res.status(SERVER_ERROR_CODE).json({message: error.message});
   })
 }
 
 module.exports.getUser = (req, res)=>{
   const userId = req.params.id;
   User.findById(userId)
-  .orFail(()=>{
-    const error = new Error('No se ha encontrado ningún user con ese id');
-    error.statusCode = 404;
-    throw error;
-  })
+  .orFail()
   .then((user) =>{
-    res.send(user);
+    res.send({data: user});
   })
-  .catch((err)=>{
-    console.log(err);
-    res
-      .status(NOT_FOUND_CODE)
-      .send({menssage: 'No se ha encontrado ningún user con ese id'});
+  .catch((error)=>{
+    res.status(NOT_FOUND_CODE).json({ message: error.message });
   });
 };
 
@@ -36,9 +34,33 @@ module.exports.createUser = (req, res) =>{
     res.send({data: user});
   })
 
-  .catch(() =>{
-    res
-      .status(ERROR_CODE)
-      .send({ menssage: 'Los datos proporcionados no son válidos'});
+  .catch((error) =>{
+    res.status(ERROR_CODE).json({message: error.message});
   })
+};
+
+module.exports.updateProfile = (req, res)=>{
+  const {name, about} = req.body;
+  const userId = req.user._id;
+  User.findByIdAndUpdate(userId, {name, about},{ new: true})
+  .orFail()
+  .then((user)=>{
+    res.send({data: user});
+  })
+  .catch((error)=>{
+    res.status(NOT_FOUND_CODE).json({message: error.message})
+  });
+};
+
+module.exports.updateAvatar = (req, res)=>{
+  const {avatar} = req.body
+  const userId = req.user._id
+  User.findByIdAndUpdate(userId, {avatar}, {new: true, runValidators: true})
+  .orFail()
+  .then((user)=>{
+    res.send({data: user});
+  })
+  .catch((error)=>{
+    res.status(NOT_FOUND_CODE).json({ message: error.message});
+})
 };

@@ -1,4 +1,5 @@
 const mongoose = require ('mongoose');
+const regExpLink = /^(https?:\/\/)(www\.)?[\w~:/?%#[\]@!$&'.()*+,;=]*\/#?/;
 
 const cardSchema = mongoose.Schema({
   name:{
@@ -12,7 +13,7 @@ const cardSchema = mongoose.Schema({
     require: true,
     validate: {
       validator: function(value) {
-        return /^(https?:\/\/)(www\.)?[\w\-]+(\.[\w\-]+)+([\/?#].*)?$/.test(value);
+        return (regExpLink.test(value));
       },
       message: props => `${props.value} no es un enlace URL válido para la imagen.`
     }
@@ -20,7 +21,7 @@ const cardSchema = mongoose.Schema({
   owner: {
     type : mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    require: true
+    require: true,
   },
   likes: {
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
@@ -30,6 +31,6 @@ const cardSchema = mongoose.Schema({
     type: Date,
     default: Date.now
   }
-});
+}, {versionKey:false});
 
 module.exports = mongoose.model('card', cardSchema);

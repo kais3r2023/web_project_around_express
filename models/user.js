@@ -1,4 +1,5 @@
 const mongoose = require ('mongoose');
+const regExpLink = /^(https?:\/\/)(www\.)?[\w~:/?%#[\]@!$&'.()*+,;=]*\/#?/;
 
 const userSchema = mongoose.Schema({
   name:{
@@ -18,11 +19,11 @@ const userSchema = mongoose.Schema({
     require: true,
     validate: {
       validator(value){
-        return /https?:\/\/(www\.)?[\w.-]+(?:\/[\w._~:\/?%#[\]@!$&'()*+,;=]*)?#?/g.test(value);
+        return (regExpLink.test(value));
       },
       message: props => `${props.value} no es un enlace URL válido para avatar.`
     }
   }
-})
+},{versionKey: false});
 
 module.exports = mongoose.model('user', userSchema);
